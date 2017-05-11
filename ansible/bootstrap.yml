@@ -1,0 +1,58 @@
+---
+  - hosts: 127.0.0.1
+    connection: local
+    vars:
+      pwd: "{{ ansible_env.PWD }}"
+      inventories:
+      - production
+      - staging
+      - vagrant
+    tasks:
+    - name: Create Inventory Group and Hosts Vars repository
+      file:
+        state: directory
+        dest: "{{pwd}}/inventories/{{item[0]}}/{{item[1]}}"
+      with_nested: 
+        - "{{inventories}}"
+        - ['group_vars', 'host_vars'] 
+    - name: Create Inventory Vars file
+      file:
+        state: touch
+        dest: "{{pwd}}/inventories/{{item[0]}}/{{item[1]}}/all.yml"
+      with_nested: 
+        - "{{inventories}}"
+        - ['group_vars', 'host_vars'] 
+    - name: Create Inventory Hosts file
+      file:
+        state: touch
+        dest: "{{pwd}}/inventories/{{item}}/hosts"
+      with_items: 
+        "{{inventories}}"
+    - name: Create Role tree
+      file:
+        state: directory
+        dest: "{{pwd}}/roles/{{role_name}}/{{item}}"
+      with_items: 
+        - defaults
+        - files
+        - handlers
+        - meta
+        - tasks
+        - templates
+        - vars
+      tags: create_role
+      when: ((role_name is defined) and (role_name is not none))
+    - name: Create Role mains
+      file:
+        state: touch
+        dest: "{{pwd}}/roles/{{role_name}}/{{item}}/main.yml"
+      with_items: 
+        - defaults
+        - files
+        - handlers
+        - meta
+        - tasks
+        - templates
+        - vars
+      tags: create_role
+      when: ((role_name is defined) and (role_name is not none))

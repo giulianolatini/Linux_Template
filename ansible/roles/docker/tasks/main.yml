@@ -70,7 +70,7 @@
   - name: Sync docker data directory
     become: no
     synchronize:
-      src: "docker/"
+      src: "{{ playbook_dir }}/../docker/"
       dest: "{{ docker_compose_home }}"
       owner: no
       group: no

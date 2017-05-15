@@ -1,0 +1,6 @@
+---
+- hosts: all
+  become: yes
+  roles:
+    - { role: os, tags: os }
+    - { role: docker, tags: docker, when: (docker_compose_home is defined and docker_compose_home is not none and docker_compose_home | trim != '') }

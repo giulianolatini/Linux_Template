@@ -1,0 +1,36 @@
+---
+- name: Update APT cache
+  apt: 
+    cache_valid_time: 3600 
+    update_cache: yes
+
+- name: Install common packages
+  apt: 
+    name: "{{ item }}" 
+    state: present
+  with_items:
+    - aptitude
+    - iptraf
+    - ntp
+    - zsh
+    - tree
+    - htop
+    - byobu
+  register: installpgk
+  until: installpgk | success
+  retries: 5
+  delay: 10
+
+- name: Add hostname to local hosts file
+  replace: 
+    dest: /etc/hosts
+    regexp: "^127.0.0.1\\slocalhost$" 
+    replace: "127.0.0.1\tlocalhost\t{{ inventory_hostname }}"
+
+- name: Copy common system-wide configuration files
+  copy: 
+    dest: "/etc/{{ item }}" 
+    mode: 0644 
+    src: "etc/{{ item }}"
+  with_items:
+    - bash.bashrc

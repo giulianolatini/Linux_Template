@@ -4,16 +4,14 @@
 
 Other things to include:
 
-  - **Technology stack**: Indicate the technological nature of the software, including primary programming language(s) and whether the software is intended as standalone or as a module in a framework or other ecosystem.
-  - **Status**:  Pre-Alpha [CHANGELOG](CHANGELOG.md).
-  - **Links to production or demo instances**
-  - Describe what sets this apart from related-projects. Linking to another doc or page is OK if this can't be expressed in a sentence or two.
-
+- **Technology stack**: Indicate the technological nature of the software, including primary programming language(s) and whether thesoftware is intended as standalone or as a module in a framework or other ecosystem.
+- **Status**:  Pre-Alpha [CHANGELOG](CHANGELOG.md).
+- **Links to production or demo instances**
+- Describe what sets this apart from related-projects. Linking to another doc or page is OK if this can't be expressed in a sentence or two.
 
 **Screenshot**: If the software has visual components, place a screenshot after the description; e.g.,
 
 ![](https://www.wowza.com/uploads/images/live-transcoding-diagram-detailed-1140x630.png)
-
 
 ## Dependencies
 
@@ -49,7 +47,7 @@ Document any known significant shortcomings with the software.
 
 Instruct users how to get help with this software; this might include links to an issue tracker, wiki, mailing list, etc.
 
-**Example**
+## **Example**
 
 If you have questions, concerns, bug reports, etc, please file an issue in this repository's Issue Tracker.
 
@@ -61,19 +59,18 @@ important pieces, etc.
 
 General instructions on _how_ to contribute should be stated with a link to [CONTRIBUTING](CONTRIBUTING.md).
 
-
 ----
 
 ## Open source licensing info
-1. [TERMS](TERMS.md)
-2. [LICENSE](LICENSE)
-3. [CFPB Source Code Policy](https://github.com/cfpb/source-code-policy/)
 
+1. [TERMS](TERMS.md)
+1. [LICENSE](LICENSE)
+1. [CFPB Source Code Policy](https://github.com/cfpb/source-code-policy/)
 
 ----
 
 ## Credits and references
 
 1. Projects that inspired you
-2. Related projects
-3. Books, papers, talks, or other sources that have meaningful impact or influence on this project
+1. Related projects
+1. Books, papers, talks, or other sources that have meaningful impact or influence on this project

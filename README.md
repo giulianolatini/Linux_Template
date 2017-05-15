@@ -1,6 +1,3 @@
-# docker-trascoding
-
-
 # Trascoding using Microservice Architecture
 
 **Description**:  Architettura per il trascoding di flussi audio/video con worker multipli.

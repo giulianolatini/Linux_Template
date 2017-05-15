@@ -6,8 +6,8 @@ require 'yaml'
  
 # Read YAML file with box details
 PWD = ENV['PWD']
-group_vars = YAML.load_file(PWD + '/inventories/vagrant/group_vars/all.yml')
-host_vars = YAML.load_file(PWD + '/inventories/vagrant/host_vars/all.yml')
+group_vars = YAML.load_file(PWD + '/ansible/inventories/vagrant/group_vars/all.yml')
+host_vars = YAML.load_file(PWD + '/ansible/inventories/vagrant/host_vars/all.yml')
 
 
 Vagrant.configure("2") do |config|
@@ -37,7 +37,7 @@ Vagrant.configure("2") do |config|
   end
 
   config.vm.provision :local, type: :ansible, run: :always do |ansible|
-    ansible.playbook = './site.yml'
+    ansible.playbook = PWD + '/ansible/site.yml'
     # ansible.tags = docker
     ansible.verbose = '-vv'
     ansible.extra_vars = group_vars 

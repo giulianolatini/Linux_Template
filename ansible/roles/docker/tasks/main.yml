@@ -80,6 +80,11 @@
         - "--exclude=.DS_Store"
     register: sync_docker_data
 
+  - name: Check if environment template exist
+    local_action: stat path="roles/docker/templates/environment" 
+    register: environment_template
+    ignore_errors: True
+
   - name: Deploy docker-compose enviroment file
     template:
       src: environment
@@ -87,7 +92,13 @@
       owner: "{{ ansible_ssh_user }}"
       group: "{{ ansible_ssh_user }}"
       mode: "u=rwx,g=rx,o=rx"
-  
+    when: environment_template.stat.exists 
+
+  - name: Check if docker-compose template exist
+    local_action: stat path="roles/docker/templates/docker-compose.yml" 
+    register: docker_compose_template
+    ignore_errors: True
+
   - name: Deploy docker-compose file
     template:
       src: docker-compose.yml
@@ -95,6 +106,7 @@
       owner: "{{ ansible_ssh_user }}"
       group: "{{ ansible_ssh_user }}"
       mode: "u=rwx,g=rx,o=rx"
+    when: docker_compose_template.stat.exists
 
   - name: Add user to docker group
     user:

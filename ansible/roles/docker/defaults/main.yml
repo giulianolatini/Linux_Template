@@ -6,3 +6,6 @@ docker_compose_home: "/var/docker"
 docker_compose_version: "1.11.2"
 docker_home: "/var/lib/docker"
 docker_project_name: docker
+docker_compose:
+  web:
+    image: "ubuntu:16.04"

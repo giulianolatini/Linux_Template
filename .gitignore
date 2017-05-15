@@ -1,2 +1,3 @@
 # Exclude dirs/file lists
 .DS_Store
+.vagrant

@@ -1,0 +1,123 @@
+---
+  - name: "Install Docker's prerequisites"
+    apt:
+      name: "{{ item }}"
+      state: present
+    with_items:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - software-properties-common
+      - linux-image-extra-virtual
+      - "linux-image-extra-{{ ansible_kernel }}"
+
+  - name: Add Docker Repository Key
+    apt_key:
+      keyserver: hkp://ha.pool.sks-keyservers.net:80
+      id: 9DC858229FC7DD38854AE2D88D81803C0EBFCD88
+      state: present
+
+  - name: Add Docker Repository
+    apt_repository:
+      repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ansible_lsb.codename}} stable"
+      filename: 'docker'
+      state: present
+
+  - name: Install Docker Engine
+    apt:
+      name: docker-ce
+      state: present
+
+  - name: Install Docker Compose
+    get_url:
+      url: "https://github.com/docker/compose/releases/download/{{ docker_compose_version }}/docker-compose-{{ ansible_system }}-{{ ansible_architecture }}"
+      dest: /usr/local/bin/docker-compose
+      owner: root
+      group: adm
+      mode: "u=rw,g=rx,o=rx"
+
+  - name: Create Docker Overwrite Configuration Directory
+    file:
+      path: /etc/systemd/system
+      state: directory
+      owner: root
+      group: adm
+      mode: "u=rw,g=r,o=r"
+
+  - name: Create Docker Overwrite Configuration Directory
+    file:
+      path: /etc/systemd/system/docker.service.d
+      state: directory
+      mode: "u=rw,g=r,o=r"
+
+  - name: Config Docker Engine
+    template:
+      src: dockerd.conf
+      dest: /etc/systemd/system/docker.service.d/dockerd.conf
+      owner: root
+      group: adm
+      mode: "u=rw,g=r,o=r"
+    notify: restart dockerd
+
+  - name: Create docker data directory
+    file:
+      state: directory
+      path: "{{ docker_compose_home }}"
+      owner: "{{ ansible_ssh_user }}"
+      group: "{{ ansible_ssh_user }}"
+      mode: "u=rwx,g=rx,o=rx"
+
+  - name: Sync docker data directory
+    become: no
+    synchronize:
+      src: "docker/"
+      dest: "{{ docker_compose_home }}"
+      owner: no
+      group: no
+      perms: no
+      rsync_opts:
+        - "--no-motd"
+        - "--exclude=.DS_Store"
+    register: sync_docker_data
+
+  - name: Deploy docker-compose enviroment file
+    template:
+      src: environment
+      dest: "{{ docker_compose_home }}/.env"
+      owner: "{{ ansible_ssh_user }}"
+      group: "{{ ansible_ssh_user }}"
+      mode: "u=rwx,g=rx,o=rx"
+  
+  - name: Deploy docker-compose file
+    template:
+      src: docker-compose.yml
+      dest: "{{ docker_compose_home }}/docker-compose.yml"
+      owner: "{{ ansible_ssh_user }}"
+      group: "{{ ansible_ssh_user }}"
+      mode: "u=rwx,g=rx,o=rx"
+
+  - name: Add user to docker group
+    user:
+      name: "{{ ansible_ssh_user }}"
+      state: present
+      groups: docker,sudo
+
+  - name: Pull Docker Project
+    shell: docker-compose pull
+    args:
+      chdir: "{{ docker_compose_home }}"
+
+  - name: Install Docker Compose completion for Bash
+    get_url: 
+      dest: "/etc/bash_completion.d/docker-compose" 
+      mode: 0644 
+      url: "https://raw.githubusercontent.com/docker/compose/{{ docker_compose_version }}/contrib/completion/bash/docker-compose"
+
+  - name: Run Docker Compose Project
+    shell: "cd {{ docker_compose_home }} && docker-compose up -d"
+
+  - name: Copy logrotate snippet configuration file
+    copy: 
+      dest: /etc/logrotate.d/docker 
+      mode: 0644 
+      src: etc/logrotate.d/docker

@@ -36,7 +36,7 @@
       group: adm
       mode: "u=rw,g=rx,o=rx"
 
-  - name: Create Docker Overwrite Configuration Directory
+  - name: Create Docker Systemd Overwrite Configuration Directory
     file:
       path: /etc/systemd/system
       state: directory
@@ -44,13 +44,13 @@
       group: adm
       mode: "u=rw,g=r,o=r"
 
-  - name: Create Docker Overwrite Configuration Directory
+  - name: Create Docker Systemd Overwrite Configuration Service Directory
     file:
       path: /etc/systemd/system/docker.service.d
       state: directory
       mode: "u=rw,g=r,o=r"
 
-  - name: Config Docker Engine
+  - name: Config Docker Engine for Systemd
     template:
       src: dockerd.conf
       dest: /etc/systemd/system/docker.service.d/dockerd.conf

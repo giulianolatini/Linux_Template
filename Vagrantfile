@@ -11,7 +11,7 @@ host_vars = YAML.load_file(PWD + '/ansible/inventories/vagrant/host_vars/all.yml
 
 
 Vagrant.configure("2") do |config|
-  config.vm.box = "parallels/ubuntu-14.04"
+  config.vm.box = "parallels/ubuntu-16.04"
 
   # config.vm.synced_folder "host_path", "guest_path", id: "id"
   # config.vm.network "forwarded_port",  host: "host_port", guest: "guest_port", id: "id_port"

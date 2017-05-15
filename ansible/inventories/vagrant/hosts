@@ -1,0 +1,2 @@
+[vagrant]
+default ansible_become=true ansible_user=vagrant
